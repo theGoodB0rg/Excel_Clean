@@ -1,0 +1,12 @@
+ID,Name,Department,Salary,Hire Date
+1,John Smith,Engineering,85000,01/15/2020
+2,Jane Doe,Marketing,72000,03/22/2019
+,,,,
+3,Bob Johnson,Sales,68000,06/10/2021
+4,Alice Brown,Engineering,92000,11/05/2018
+,,,,
+,,,,
+5,Charlie Wilson,HR,65000,02/28/2022
+6,Diana Prince,Marketing,78000,08/14/2020
+,,,,
+7,Edward Norton,Engineering,95000,04/01/2017
