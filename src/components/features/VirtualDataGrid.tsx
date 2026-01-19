@@ -3,6 +3,7 @@ import { useDataStore } from '../../stores/data-store';
 
 interface VirtualDataGridProps {
     height?: number;
+    showOriginal?: boolean;
 }
 
 const ROW_HEIGHT = 40;
@@ -13,16 +14,19 @@ const OVERSCAN = 5; // Extra rows to render above/below viewport
  * VirtualDataGrid - Custom virtualized table for large datasets
  * Uses CSS-based virtualization for smooth performance on 50k+ rows
  */
-export function VirtualDataGrid({ height = 400 }: VirtualDataGridProps) {
-    const { headers, cleanedData } = useDataStore();
+export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualDataGridProps) {
+    const { headers, cleanedData, originalData } = useDataStore();
     const containerRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState(0);
 
-    const totalHeight = cleanedData.length * ROW_HEIGHT;
+    // Choose which data to display based on toggle
+    const displayData = showOriginal ? originalData : cleanedData;
+
+    const totalHeight = displayData.length * ROW_HEIGHT;
     const visibleCount = Math.ceil(height / ROW_HEIGHT);
     const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN);
-    const endIndex = Math.min(cleanedData.length, startIndex + visibleCount + OVERSCAN * 2);
-    const visibleRows = cleanedData.slice(startIndex, endIndex);
+    const endIndex = Math.min(displayData.length, startIndex + visibleCount + OVERSCAN * 2);
+    const visibleRows = displayData.slice(startIndex, endIndex);
     const offsetY = startIndex * ROW_HEIGHT;
 
     useEffect(() => {
@@ -39,8 +43,13 @@ export function VirtualDataGrid({ height = 400 }: VirtualDataGridProps) {
 
     return (
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            {/* Header */}
+            {/* Header with indicator */}
             <div className="flex bg-gray-100 border-b border-gray-200 overflow-x-auto">
+                {showOriginal && (
+                    <div className="absolute top-1 left-1 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded z-10">
+                        Viewing Original
+                    </div>
+                )}
                 {headers.map((header, i) => (
                     <div
                         key={i}
@@ -87,7 +96,8 @@ export function VirtualDataGrid({ height = 400 }: VirtualDataGridProps) {
 
             {/* Footer Stats */}
             <div className="px-4 py-2 text-sm text-gray-500 bg-gray-50 border-t border-gray-200">
-                {cleanedData.length.toLocaleString()} rows × {headers.length} columns
+                {displayData.length.toLocaleString()} rows × {headers.length} columns
+                {showOriginal && <span className="ml-2 text-amber-600">(Original)</span>}
             </div>
         </div>
     );

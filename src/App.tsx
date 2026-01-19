@@ -169,7 +169,10 @@ function App() {
               </div>
 
               {/* Virtual Data Grid */}
-              <VirtualDataGrid height={Math.min(500, window.innerHeight - 250)} />
+              <VirtualDataGrid
+                height={Math.min(500, window.innerHeight - 250)}
+                showOriginal={showOriginal}
+              />
             </section>
 
             {/* ActionBar - Hidden bottom portion on mobile */}
