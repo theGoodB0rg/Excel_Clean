@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { DropZone } from './components/features/DropZone';
+import { ActionBar } from './components/features/ActionBar';
 import { ProgressBar } from './components/ui/ProgressBar';
 import { parseFile } from './lib/file-parser';
 import { useDataStore } from './stores/data-store';
@@ -35,6 +36,21 @@ function App() {
       setError(err instanceof Error ? err.message : 'Failed to parse file');
     }
   }, [setFile, setProcessing, setError]);
+
+  const handleDownload = () => {
+    const csvContent = [
+      headers.join(','),
+      ...cleanedData.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cleaned_${fileName}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,54 +89,72 @@ function App() {
           </section>
         )}
 
-        {/* Data Preview Section */}
+        {/* Data Preview Section with ActionBar */}
         {fileName && (
-          <section>
-            {/* File Info Bar */}
-            <div className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-white rounded-lg shadow-sm">
-              <span className="font-medium text-gray-700">{fileName}</span>
-              <span className="text-sm text-gray-500">
-                ({cleanedData.length} rows, {headers.length} columns)
-              </span>
-              <button
-                onClick={() => useDataStore.getState().reset()}
-                className="ml-auto text-sm text-indigo-600 hover:text-indigo-800"
-              >
-                Upload New File
-              </button>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+            {/* Main Content */}
+            <section>
+              {/* File Info Bar */}
+              <div className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-white rounded-lg shadow-sm">
+                <span className="font-medium text-gray-700">{fileName}</span>
+                <span className="text-sm text-gray-500">
+                  ({cleanedData.length} rows, {headers.length} columns)
+                </span>
+                <div className="ml-auto flex gap-2">
+                  <button
+                    onClick={handleDownload}
+                    className="px-4 py-1.5 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                  >
+                    Download CSV
+                  </button>
+                  <button
+                    onClick={() => useDataStore.getState().reset()}
+                    className="px-4 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    New File
+                  </button>
+                </div>
+              </div>
 
-            {/* Preview Table (simple for now, will be virtualized in Phase 4) */}
-            <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-100">
-                  <tr>
-                    {headers.map((header, i) => (
-                      <th key={i} className="px-4 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
-                        {header || `Column ${i + 1}`}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {cleanedData.slice(0, 20).map((row, rowIndex) => (
-                    <tr key={rowIndex} className="border-t border-gray-100 hover:bg-gray-50">
-                      {row.map((cell, cellIndex) => (
-                        <td key={cellIndex} className="px-4 py-2 text-gray-600 whitespace-nowrap">
-                          {cell || <span className="text-gray-300">—</span>}
-                        </td>
+              {/* Preview Table */}
+              <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      {headers.map((header, i) => (
+                        <th key={i} className="px-4 py-2 text-left font-medium text-gray-700 whitespace-nowrap">
+                          {header || `Column ${i + 1}`}
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {cleanedData.length > 20 && (
-                <div className="px-4 py-2 text-sm text-gray-500 bg-gray-50 border-t">
-                  Showing 20 of {cleanedData.length} rows
-                </div>
-              )}
-            </div>
-          </section>
+                  </thead>
+                  <tbody>
+                    {cleanedData.slice(0, 20).map((row, rowIndex) => (
+                      <tr key={rowIndex} className="border-t border-gray-100 hover:bg-gray-50">
+                        {row.map((cell, cellIndex) => (
+                          <td key={cellIndex} className="px-4 py-2 text-gray-600 whitespace-nowrap">
+                            {cell || <span className="text-gray-300">—</span>}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {cleanedData.length > 20 && (
+                  <div className="px-4 py-2 text-sm text-gray-500 bg-gray-50 border-t">
+                    Showing 20 of {cleanedData.length} rows
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* ActionBar - Sidebar on desktop, below on mobile */}
+            <aside className="order-first lg:order-last">
+              <div className="lg:sticky lg:top-6">
+                <ActionBar />
+              </div>
+            </aside>
+          </div>
         )}
       </main>
     </div>
