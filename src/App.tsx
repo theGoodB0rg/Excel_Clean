@@ -3,6 +3,7 @@ import { DropZone } from './components/features/DropZone';
 import { ActionBar } from './components/features/ActionBar';
 import { VirtualDataGrid } from './components/features/VirtualDataGrid';
 import { AffiliateSidebar } from './components/features/AffiliateSidebar';
+import { HiddenColumnsDropdown } from './components/features/HiddenColumnsDropdown';
 import { ProgressBar } from './components/ui/ProgressBar';
 import { parseFile } from './lib/file-parser';
 import { useDataStore } from './stores/data-store';
@@ -14,6 +15,8 @@ function App() {
     headers,
     cleanedData,
     originalData,
+    visibleColumns,
+    columnOrder,
     isProcessing,
     progress,
     error,
@@ -42,9 +45,16 @@ function App() {
   }, [setFile, setProcessing, setError]);
 
   const handleDownload = () => {
+    // Apply column visibility and order to export
+    const displayColumns = columnOrder.filter(i => visibleColumns.includes(i));
+    const exportHeaders = displayColumns.map(i => headers[i]);
+    const exportRows = cleanedData.map(row =>
+      displayColumns.map(i => `"${(row[i] || '').replace(/"/g, '""')}"`)
+    );
+
     const csvContent = [
-      headers.join(','),
-      ...cleanedData.map(row => row.map(cell => `"${(cell || '').replace(/"/g, '""')}"`).join(','))
+      exportHeaders.join(','),
+      ...exportRows.map(row => row.join(','))
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -146,6 +156,9 @@ function App() {
                 )}
 
                 <div className="ml-auto flex items-center gap-2">
+                  {/* Hidden Columns Dropdown */}
+                  <HiddenColumnsDropdown />
+
                   {/* Before/After Toggle */}
                   {hasChanges && (
                     <button
