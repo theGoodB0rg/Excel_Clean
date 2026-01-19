@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { DropZone } from './components/features/DropZone';
 import { ActionBar } from './components/features/ActionBar';
 import { VirtualDataGrid } from './components/features/VirtualDataGrid';
+import { AffiliateSidebar } from './components/features/AffiliateSidebar';
 import { ProgressBar } from './components/ui/ProgressBar';
 import { parseFile } from './lib/file-parser';
 import { useDataStore } from './stores/data-store';
@@ -150,8 +151,8 @@ function App() {
                     <button
                       onClick={() => setShowOriginal(!showOriginal)}
                       className={`px-3 py-1.5 text-xs rounded-lg border transition-colors ${showOriginal
-                          ? 'bg-gray-100 border-gray-300 text-gray-700'
-                          : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                        ? 'bg-gray-100 border-gray-300 text-gray-700'
+                        : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
                         }`}
                     >
                       {showOriginal ? 'Show Cleaned' : 'Show Original'}
@@ -173,8 +174,9 @@ function App() {
 
             {/* ActionBar - Hidden bottom portion on mobile */}
             <aside className="hidden lg:block">
-              <div className="sticky top-20">
+              <div className="sticky top-20 space-y-4">
                 <ActionBar />
+                {hasChanges && <AffiliateSidebar />}
               </div>
             </aside>
           </div>
