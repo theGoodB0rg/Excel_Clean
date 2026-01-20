@@ -1,13 +1,19 @@
 import { useCallback, useState } from 'react';
-import { DropZone } from './components/features/DropZone';
 import { ActionBar } from './components/features/ActionBar';
 import { VirtualDataGrid } from './components/features/VirtualDataGrid';
 import { AffiliateSidebar } from './components/features/AffiliateSidebar';
 import { HiddenColumnsDropdown } from './components/features/HiddenColumnsDropdown';
-import { ProgressBar } from './components/ui/ProgressBar';
 import { parseFile } from './lib/file-parser';
 import { useDataStore } from './stores/data-store';
 import './App.css';
+
+// Landing Page Components
+import { Hero } from './components/landing/Hero';
+import { Features } from './components/landing/Features';
+import { HowItWorks } from './components/landing/HowItWorks';
+import { UseCases } from './components/landing/UseCases';
+import { FAQ } from './components/landing/FAQ';
+import { CTA } from './components/landing/CTA';
 
 function App() {
   const {
@@ -23,6 +29,7 @@ function App() {
     setFile,
     setProcessing,
     setError,
+    reset
   } = useDataStore();
 
   const [showOriginal, setShowOriginal] = useState(false);
@@ -67,205 +74,152 @@ function App() {
 
   const hasChanges = JSON.stringify(cleanedData) !== JSON.stringify(originalData);
 
-  return (
-    <div className="min-h-screen">
-      {/* Premium Header - Always visible */}
-      <header className="glass-card sticky top-0 z-10 border-b-0" style={{ borderBottom: '1px solid rgba(6, 182, 212, 0.1)' }}>
-        <div className="container py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+  // If no file is loaded, show the complete Landing Page
+  if (!fileName) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+          <div className="container py-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                DS
+              </div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-700 to-teal-700 bg-clip-text text-transparent">
                 DataScrub
               </h1>
-              <p className="text-xs md:text-sm text-gray-600 mt-1">
-                <span className="inline-flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  100% Private • No Server Upload
-                </span>
-              </p>
             </div>
-            {fileName && (
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="text-sm font-semibold text-slate-600 hover:text-cyan-600 transition-colors"
+            >
+              Start Cleaning
+            </button>
+          </div>
+        </header>
+
+        <main className="flex-grow">
+          <Hero
+            onFileSelected={handleFileSelected}
+            isProcessing={isProcessing}
+            progress={progress}
+            error={error}
+          />
+          <Features />
+          <HowItWorks />
+          <UseCases />
+          <FAQ />
+          <CTA onUploadClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+        </main>
+
+        <footer className="py-8 bg-slate-900 text-slate-400 text-sm text-center border-t border-white/10">
+          <p>© {new Date().getFullYear()} DataScrub. 100% Private & Secure.</p>
+        </footer>
+      </div>
+    );
+  }
+
+  // App Interface (File Loaded)
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      {/* App Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div className="container py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => reset()}
+                className="p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500"
+                title="Go back home"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </button>
+              <div>
+                <h1 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  DataScrub <span className="text-slate-300 font-normal">|</span> <span className="text-cyan-600 truncate max-w-[200px]">{fileName}</span>
+                </h1>
+                <p className="text-xs text-slate-500">
+                  {cleanedData.length.toLocaleString()} rows • {headers.length} columns
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {hasChanges && (
+                <span className="hidden md:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                  Unsaved Changes
+                </span>
+              )}
+
               <button
                 onClick={handleDownload}
-                title="Download cleaned CSV file"
-                className="btn-premium px-5 py-2.5 text-sm flex items-center gap-2"
+                className="btn-premium px-4 py-2 text-sm flex items-center gap-2"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                <span>Download</span>
+                <span className="hidden sm:inline">Download CSV</span>
               </button>
-            )}
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="container py-4 md:py-6">
-        {/* Upload Hero Section - Optimized spacing */}
-        {!fileName && (
-          <section className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-center py-8 md:py-12">
-              {/* Left: Messaging */}
-              <div className="space-y-5 text-center lg:text-left">
-                <div>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3">
-                    <span className="bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
-                      Clean Your Data
-                    </span>
-                    <br />
-                    <span className="text-slate-800">In Seconds</span>
-                  </h2>
-                  <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                    Remove blank rows, fix dates, trim spaces. All in your browser. No uploads. No limits.
-                  </p>
-                </div>
-
-                {/* Feature Pills */}
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  {[
-                    {
-                      icon: (
-                        <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      ),
-                      text: '50k+ Rows'
-                    },
-                    {
-                      icon: (
-                        <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                      ),
-                      text: '100% Private'
-                    },
-                    {
-                      icon: (
-                        <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      ),
-                      text: 'Smart Detect'
-                    },
-                    {
-                      icon: (
-                        <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      ),
-                      text: 'Instant'
-                    }
-                  ].map((item) => (
-                    <div key={item.text} className="glass-card px-3.5 py-2 flex items-center gap-2 hover:scale-105 transition-all">
-                      {item.icon}
-                      <span className="font-medium text-sm text-slate-700">{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: Upload Zone */}
-              <div className="space-y-4">
-                <DropZone
-                  onFileSelected={handleFileSelected}
-                  isProcessing={isProcessing}
-                />
-
-                {isProcessing && (
-                  <ProgressBar progress={progress} label="Processing file..." />
-                )}
-
-                {error && (
-                  <div className="glass-card p-4 bg-red-50/50 border-red-200 text-red-700 text-sm">
-                    {error}
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Data View Section - Compact when file loaded */}
-        {fileName && (
-          <div className="space-y-4">
-            {/* File Info Bar */}
-            <div className="glass-card p-3.5 flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="min-w-0">
-                  <div className="font-semibold text-slate-900 truncate">{fileName}</div>
-                  <div className="text-sm text-slate-500">
-                    {cleanedData.length.toLocaleString()} rows × {headers.length} columns
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                {hasChanges && (
-                  <span className="px-3 py-1 bg-gradient-to-r from-emerald-100 to-teal-100 text-teal-700 text-xs rounded-full font-medium">
-                    Modified
-                  </span>
-                )}
-
-                <HiddenColumnsDropdown />
-
-                {hasChanges && (
-                  <button
-                    onClick={() => setShowOriginal(!showOriginal)}
-                    title={showOriginal ? 'Switch to cleaned data view' : 'Switch to original data view'}
-                    className={`px-3 py-1.5 text-xs rounded-lg border transition-all flex items-center gap-1.5 ${showOriginal
-                      ? 'bg-gradient-to-r from-cyan-500 to-teal-600 text-white border-transparent shadow-md'
-                      : 'bg-white border-slate-200 text-slate-600 hover:border-cyan-300'
-                      }`}
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    {showOriginal ? 'Cleaned' : 'Original'}
-                  </button>
-                )}
-
-                <button
-                  onClick={() => useDataStore.getState().reset()}
-                  title="Clear current file and upload a new one"
-                  className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-red-50 hover:border-red-200 hover:text-red-600 text-slate-600 transition-colors"
-                >
-                  New File
-                </button>
-              </div>
-            </div>
-
-            {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
-              {/* DataGrid */}
-              <VirtualDataGrid
-                height={Math.min(700, window.innerHeight - 220)}
-                showOriginal={showOriginal}
-              />
-
-              {/* Sidebar */}
-              <div className="hidden lg:block space-y-4">
-                <ActionBar />
-                {hasChanges && <AffiliateSidebar />}
-              </div>
-            </div>
+      <main className="container py-6 flex-grow flex flex-col">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          {/* View Toggle */}
+          <div className="bg-white border border-slate-200 rounded-lg p-1 flex shadow-sm">
+            <button
+              onClick={() => setShowOriginal(false)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${!showOriginal ? 'bg-cyan-50 text-cyan-700 shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              Cleaned Data
+            </button>
+            <button
+              onClick={() => setShowOriginal(true)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${showOriginal ? 'bg-cyan-50 text-cyan-700 shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              Original
+            </button>
           </div>
-        )}
+
+          <div className="h-6 w-px bg-slate-200 mx-1" />
+
+          <HiddenColumnsDropdown />
+        </div>
+
+        {/* Workspace */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 flex-grow">
+          {/* Main Grid Area */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-220px)] min-h-[500px]">
+            <VirtualDataGrid
+              height={undefined} // Let flex grow handle it
+              showOriginal={showOriginal}
+            />
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-220px)] pr-1">
+            <ActionBar />
+            {hasChanges && <AffiliateSidebar />}
+          </div>
+        </div>
       </main>
 
-      {/* Mobile ActionBar */}
-      {fileName && (
-        <div className="lg:hidden">
-          <ActionBar />
-        </div>
-      )}
+      {/* Mobile Actions Drawer (only visible on small screens) */}
+      <div className="lg:hidden fixed bottom-4 right-4 z-40">
+        <button
+          className="w-12 h-12 bg-cyan-600 text-white rounded-full shadow-lg flex items-center justify-center"
+          onClick={() => document.querySelector('.lg\\:hidden > .action-bar-mobile')?.classList.toggle('hidden')}
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
