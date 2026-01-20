@@ -19,12 +19,30 @@ function ActionButton({ label, description, onClick, icon }: ActionButtonProps) 
     return (
         <button
             onClick={onClick}
-            className="w-full p-3 md:p-4 rounded-lg text-left transition-all bg-white border border-gray-200 hover:border-indigo-300 hover:shadow-sm active:scale-[0.98]"
+            className="
+        group relative overflow-hidden
+        w-full p-4 rounded-xl text-left
+        transition-all duration-200
+        bg-white/80 backdrop-blur-sm
+        border border-gray-200/50
+        hover:border-indigo-300 hover:shadow-md
+        active:scale-[0.98]
+      "
+            style={{
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+            }}
         >
-            <div className="flex items-center gap-3">
-                {icon && <div className="text-indigo-500">{icon}</div>}
+            {/* Subtle gradient overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-purple-50/0 group-hover:from-indigo-50/50 group-hover:to-purple-50/30 transition-all duration-300 pointer-events-none" />
+
+            <div className="relative flex items-center gap-3">
+                {icon && (
+                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                        {icon}
+                    </div>
+                )}
                 <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-900 text-sm md:text-base">{label}</div>
+                    <div className="font-semibold text-gray-900 text-sm md:text-base">{label}</div>
                     <div className="text-xs md:text-sm text-gray-500 truncate">{description}</div>
                 </div>
             </div>
@@ -33,10 +51,10 @@ function ActionButton({ label, description, onClick, icon }: ActionButtonProps) 
 }
 
 /**
- * MobileActionBar - Bottom sheet on mobile, sidebar on desktop
+ * Premium ActionBar - Glassmorphic sidebar with polished interactions
  */
 export function ActionBar() {
-    const { cleanedData, originalData, setCleanedData, headers } = useDataStore();
+    const { cleanedData, originalData, setCleanedData, headers, resetColumns } = useDataStore();
     const [selectedDateFormat, setSelectedDateFormat] = useState<DateFormat>('iso');
     const [isExpanded, setIsExpanded] = useState(false);
     const [lastAction, setLastAction] = useState<{ action: string; count: number } | null>(null);
@@ -64,6 +82,7 @@ export function ActionBar() {
 
     const handleReset = () => {
         setCleanedData(originalData);
+        resetColumns();
         setLastAction(null);
     };
 
@@ -72,40 +91,54 @@ export function ActionBar() {
             {/* Mobile Bottom Sheet Toggle */}
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="lg:hidden fixed bottom-0 left-0 right-0 bg-indigo-600 text-white py-4 px-6 flex items-center justify-between z-40"
+                className="
+          lg:hidden fixed bottom-0 left-0 right-0 z-40
+          py-4 px-6 flex items-center justify-between
+          bg-gradient-to-r from-indigo-600 to-purple-600
+          text-white font-semibold
+          shadow-lg
+        "
             >
-                <span className="font-medium">Cleaning Tools</span>
-                <span className="text-indigo-200">{isExpanded ? '▼ Close' : '▲ Open'}</span>
+                <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    Cleaning Tools
+                </div>
+                <svg className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
             </button>
 
             {/* Action Panel */}
             <div className={`
-        bg-white border-gray-200 
+        glass-card
         fixed lg:relative bottom-0 left-0 right-0 lg:bottom-auto
         transform transition-transform duration-300 ease-out
         ${isExpanded ? 'translate-y-0' : 'translate-y-[calc(100%-56px)] lg:translate-y-0'}
         lg:translate-y-0
-        border-t lg:border-t-0 lg:border-l
         z-30
         max-h-[70vh] lg:max-h-none overflow-y-auto
-        pb-16 lg:pb-0
+        pb-20 lg:pb-0
       `}>
                 {/* Header */}
-                <div className="p-4 border-b border-gray-100 sticky top-0 bg-white">
+                <div className="p-5 border-b border-gray-100/50 sticky top-0 bg-white/80 backdrop-blur-sm">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-semibold text-gray-900">Cleaning Actions</h2>
+                        <div>
+                            <h2 className="font-bold text-gray-900 text-lg">Cleaning Actions</h2>
+                            <p className="text-sm text-gray-500 mt-0.5">
+                                {cleanedData.length.toLocaleString()} rows × {headers.length} columns
+                            </p>
+                        </div>
                         {hasChanges && (
                             <button
                                 onClick={handleReset}
-                                className="text-xs text-red-500 hover:text-red-700"
+                                className="px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                             >
-                                Reset
+                                Reset All
                             </button>
                         )}
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">
-                        {cleanedData.length.toLocaleString()} rows × {headers.length} columns
-                    </p>
                 </div>
 
                 {/* Actions */}
@@ -114,46 +147,65 @@ export function ActionBar() {
                         label="Trim Whitespace"
                         description="Remove extra spaces from all cells"
                         onClick={handleTrimWhitespace}
-                        icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>}
+                        icon={
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        }
                     />
 
                     <ActionButton
                         label="Remove Blank Rows"
                         description="Delete rows with all empty cells"
                         onClick={handleRemoveBlankRows}
-                        icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>}
+                        icon={
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        }
                     />
 
                     {/* Date Format Section */}
-                    <div className="bg-gray-50 rounded-lg p-4">
-                        <div className="font-medium text-gray-900 mb-2 text-sm md:text-base">Normalize Dates</div>
-                        <p className="text-xs md:text-sm text-gray-500 mb-3">
-                            Convert all date formats to your chosen style
-                        </p>
+                    <div className="glass-card p-4 border-indigo-100">
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div className="font-semibold text-gray-900 text-sm md:text-base">Normalize Dates</div>
+                                <p className="text-xs md:text-sm text-gray-500">
+                                    Convert to your chosen style
+                                </p>
+                            </div>
+                        </div>
 
-                        {/* Format Selector - Grid on mobile, 2x2 on desktop */}
+                        {/* Format Selector */}
                         <div className="grid grid-cols-2 gap-2 mb-3">
                             {DATE_FORMATS.map((format) => (
                                 <button
                                     key={format.value}
                                     onClick={() => setSelectedDateFormat(format.value)}
                                     className={`
-                    p-2 rounded text-left transition-all text-sm
+                    p-3 rounded-lg text-left transition-all text-sm
                     ${selectedDateFormat === format.value
-                                            ? 'bg-indigo-100 border-2 border-indigo-500 text-indigo-700'
-                                            : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-300'
+                                            ? 'bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md scale-[1.02]'
+                                            : 'bg-white/60 border border-gray-200 text-gray-600 hover:border-indigo-200 hover:bg-indigo-50/30'
                                         }
                   `}
                                 >
-                                    <div className="font-medium text-xs md:text-sm">{format.label}</div>
-                                    <div className="text-xs opacity-75">{format.example}</div>
+                                    <div className="font-semibold text-xs md:text-sm">{format.label}</div>
+                                    <div className={`text-xs ${selectedDateFormat === format.value ? 'text-indigo-100' : 'text-gray-500'}`}>
+                                        {format.example}
+                                    </div>
                                 </button>
                             ))}
                         </div>
 
                         <button
                             onClick={handleFixDates}
-                            className="w-full py-2.5 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base font-medium active:scale-[0.98]"
+                            className="btn-premium w-full text-sm md:text-base"
                         >
                             Apply Date Format
                         </button>
@@ -162,11 +214,16 @@ export function ActionBar() {
 
                 {/* Success Toast */}
                 {lastAction && (
-                    <div className="mx-4 mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 text-sm">
-                        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>{lastAction.action} ({lastAction.count} affected)</span>
+                    <div className="mx-4 mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg flex items-center gap-3 text-green-700 text-sm shadow-sm animate-fadeIn">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div className="flex-1">
+                            <div className="font-semibold">{lastAction.action}</div>
+                            <div className="text-xs text-green-600">{lastAction.count} items affected</div>
+                        </div>
                     </div>
                 )}
             </div>
@@ -174,7 +231,7 @@ export function ActionBar() {
             {/* Overlay for mobile */}
             {isExpanded && (
                 <div
-                    className="lg:hidden fixed inset-0 bg-black/30 z-20"
+                    className="lg:hidden fixed inset-0 bg-black/30 z-20 backdrop-blur-sm"
                     onClick={() => setIsExpanded(false)}
                 />
             )}

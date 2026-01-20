@@ -26,7 +26,7 @@ const COLUMN_WIDTH = 150;
 const OVERSCAN = 5;
 
 /**
- * VirtualDataGrid - Virtualized table with column reorder/hide
+ * Premium VirtualDataGrid - Frosted glass header, smooth animations
  */
 export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualDataGridProps) {
     const {
@@ -39,18 +39,13 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState(0);
-    // Local state for column order to enable immediate UI update
     const [localColumnOrder, setLocalColumnOrder] = useState(columnOrder);
 
-    // Sync local order with store
     useEffect(() => {
         setLocalColumnOrder(columnOrder);
     }, [columnOrder]);
 
-    // Choose which data to display
     const displayData = showOriginal ? originalData : cleanedData;
-
-    // Get ordered visible columns using local order for responsiveness
     const displayColumns = localColumnOrder
         .filter(i => visibleColumns.includes(i))
         .map(i => ({ index: i, header: headers[i] }));
@@ -62,7 +57,6 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
     const visibleRows = displayData.slice(startIndex, endIndex);
     const offsetY = startIndex * ROW_HEIGHT;
 
-    // DnD sensors
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
         useSensor(KeyboardSensor)
@@ -75,17 +69,13 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
         const activeColIndex = Number(active.id);
         const overColIndex = Number(over.id);
 
-        // Find positions in the current order
         const oldPos = localColumnOrder.indexOf(activeColIndex);
         const newPos = localColumnOrder.indexOf(overColIndex);
 
         if (oldPos === -1 || newPos === -1) return;
 
-        // Use arrayMove for proper reordering
         const newOrder = arrayMove(localColumnOrder, oldPos, newPos);
         setLocalColumnOrder(newOrder);
-
-        // Update store
         useDataStore.setState({ columnOrder: newOrder });
     }, [localColumnOrder]);
 
@@ -99,8 +89,8 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
     }, []);
 
     return (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            {/* Draggable Header */}
+        <div className="glass-card overflow-hidden">
+            {/* Frosted Glass Header with DnD */}
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -110,9 +100,12 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
                     items={displayColumns.map(c => c.index.toString())}
                     strategy={horizontalListSortingStrategy}
                 >
-                    <div className="flex bg-gray-100 border-b border-gray-200 overflow-x-auto">
+                    <div className="relative flex overflow-x-auto border-b border-gray-200/50" style={{
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
+                        backdropFilter: 'blur(10px)'
+                    }}>
                         {showOriginal && (
-                            <div className="absolute top-1 left-1 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded z-10">
+                            <div className="absolute top-2 left-2 px-2.5 py-1 bg-amber-500/90 text-white text-xs rounded-full z-10 font-medium shadow-sm">
                                 Viewing Original
                             </div>
                         )}
@@ -128,7 +121,7 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
                 </SortableContext>
             </DndContext>
 
-            {/* Virtualized Body */}
+            {/* Virtualized Body with hover effects */}
             <div
                 ref={containerRef}
                 className="overflow-auto"
@@ -141,17 +134,22 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
                             return (
                                 <div
                                     key={actualIndex}
-                                    className={`flex border-b border-gray-100 ${actualIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                                    className={`
+                    flex border-b border-gray-100
+                    transition-colors duration-150
+                    ${actualIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}
+                    hover:bg-indigo-50/40
+                  `}
                                     style={{ height: ROW_HEIGHT, width: displayColumns.length * COLUMN_WIDTH }}
                                 >
                                     {displayColumns.map(({ index: colIndex }) => (
                                         <div
                                             key={colIndex}
-                                            className="flex-shrink-0 px-4 py-2 text-sm text-gray-600 truncate border-r border-gray-100 flex items-center"
+                                            className="flex-shrink-0 px-4 py-2 text-sm text-gray-700 truncate border-r border-gray-100 flex items-center"
                                             style={{ width: COLUMN_WIDTH }}
                                             title={row[colIndex]}
                                         >
-                                            {row[colIndex] || <span className="text-gray-300">—</span>}
+                                            {row[colIndex] || <span className="text-gray-400">—</span>}
                                         </div>
                                     ))}
                                 </div>
@@ -161,13 +159,28 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
                 </div>
             </div>
 
-            {/* Footer Stats */}
-            <div className="px-4 py-2 text-sm text-gray-500 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-                <span>
-                    {displayData.length.toLocaleString()} rows × {displayColumns.length} columns
-                    {showOriginal && <span className="ml-2 text-amber-600">(Original)</span>}
-                </span>
-                <span className="text-xs text-gray-400">
+            {/* Premium Footer */}
+            <div className="px-4 py-3 text-sm bg-gradient-to-r from-gray-50 to-gray-100/50 border-t border-gray-200/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <span className="font-medium text-gray-700">
+                        {displayData.length.toLocaleString()} rows
+                    </span>
+                    <span className="text-gray-400">×</span>
+                    <span className="font-medium text-gray-700">
+                        {displayColumns.length} columns
+                    </span>
+                    {showOriginal && (
+                        <span className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">
+                            Original
+                        </span>
+                    )}
+                    {visibleColumns.length < headers.length && (
+                        <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
+                            {headers.length - visibleColumns.length} hidden
+                        </span>
+                    )}
+                </div>
+                <span className="text-xs text-gray-500 hidden sm:block">
                     Drag headers to reorder • Click × to hide
                 </span>
             </div>

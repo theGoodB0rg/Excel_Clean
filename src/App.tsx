@@ -69,28 +69,34 @@ function App() {
   const hasChanges = JSON.stringify(cleanedData) !== JSON.stringify(originalData);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-16 lg:pb-0">
-      {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container py-3 md:py-4">
+    <div className="min-h-screen pb-16 lg:pb-0" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%)' }}>
+      {/* Premium Header with glass effect */}
+      <header className="glass-card sticky top-0 z-10 border-b-0" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.3)' }}>
+        <div className="container py-4 md:py-5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-lg md:text-2xl font-bold text-gray-900">
+              <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Excel & CSV Cleaner
               </h1>
-              <p className="text-xs md:text-sm text-gray-500 hidden sm:block">
-                100% browser-based — your data never leaves your device
+              <p className="text-xs md:text-sm text-gray-600 hidden sm:block mt-1">
+                <span className="inline-flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  100% browser-based • Your data stays private
+                </span>
               </p>
             </div>
             {fileName && (
               <button
                 onClick={handleDownload}
-                className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium flex items-center gap-2"
+                className="btn-premium px-5 py-2.5 text-sm flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
                 <span className="hidden sm:inline">Download CSV</span>
+                <span className="sm:hidden">Download</span>
               </button>
             )}
           </div>
