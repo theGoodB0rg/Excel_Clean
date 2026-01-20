@@ -13,19 +13,21 @@ interface ActionButtonProps {
     description: string;
     onClick: () => void;
     icon?: React.ReactNode;
+    tooltip?: string;
 }
 
-function ActionButton({ label, description, onClick, icon }: ActionButtonProps) {
+function ActionButton({ label, description, onClick, icon, tooltip }: ActionButtonProps) {
     return (
         <button
             onClick={onClick}
+            title={tooltip || description}
             className="
         group relative overflow-hidden
         w-full p-4 rounded-xl text-left
         transition-all duration-200
         bg-white/80 backdrop-blur-sm
-        border border-gray-200/50
-        hover:border-indigo-300 hover:shadow-md
+        border border-slate-200/50
+        hover:border-cyan-300 hover:shadow-md
         active:scale-[0.98]
       "
             style={{
@@ -33,17 +35,17 @@ function ActionButton({ label, description, onClick, icon }: ActionButtonProps) 
             }}
         >
             {/* Subtle gradient overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-purple-50/0 group-hover:from-indigo-50/50 group-hover:to-purple-50/30 transition-all duration-300 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/0 to-teal-50/0 group-hover:from-cyan-50/50 group-hover:to-teal-50/30 transition-all duration-300 pointer-events-none" />
 
             <div className="relative flex items-center gap-3">
                 {icon && (
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-sm shadow-cyan-500/20">
                         {icon}
                     </div>
                 )}
                 <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-900 text-sm md:text-base">{label}</div>
-                    <div className="text-xs md:text-sm text-gray-500 truncate">{description}</div>
+                    <div className="font-semibold text-slate-900 text-sm md:text-base">{label}</div>
+                    <div className="text-xs md:text-sm text-slate-500 truncate">{description}</div>
                 </div>
             </div>
         </button>
@@ -94,7 +96,7 @@ export function ActionBar() {
                 className="
           lg:hidden fixed bottom-0 left-0 right-0 z-40
           py-4 px-6 flex items-center justify-between
-          bg-gradient-to-r from-indigo-600 to-purple-600
+          bg-gradient-to-r from-cyan-600 to-teal-600
           text-white font-semibold
           shadow-lg
         "
@@ -125,8 +127,8 @@ export function ActionBar() {
                 <div className="p-5 border-b border-gray-100/50 sticky top-0 bg-white/80 backdrop-blur-sm">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="font-bold text-gray-900 text-lg">Cleaning Actions</h2>
-                            <p className="text-sm text-gray-500 mt-0.5">
+                            <h2 className="font-bold text-slate-900 text-lg">Cleaning Actions</h2>
+                            <p className="text-sm text-slate-500 mt-0.5">
                                 {cleanedData.length.toLocaleString()} rows × {headers.length} columns
                             </p>
                         </div>
@@ -146,6 +148,7 @@ export function ActionBar() {
                     <ActionButton
                         label="Trim Whitespace"
                         description="Remove extra spaces from all cells"
+                        tooltip="Remove leading, trailing, and extra spaces from every cell in your data"
                         onClick={handleTrimWhitespace}
                         icon={
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,6 +160,7 @@ export function ActionBar() {
                     <ActionButton
                         label="Remove Blank Rows"
                         description="Delete rows with all empty cells"
+                        tooltip="Automatically detect and remove rows where every cell is empty"
                         onClick={handleRemoveBlankRows}
                         icon={
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,16 +170,16 @@ export function ActionBar() {
                     />
 
                     {/* Date Format Section */}
-                    <div className="glass-card p-4 border-indigo-100">
+                    <div className="glass-card p-4 border-cyan-100">
                         <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center shadow-sm shadow-cyan-500/20">
                                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
                             <div>
-                                <div className="font-semibold text-gray-900 text-sm md:text-base">Normalize Dates</div>
-                                <p className="text-xs md:text-sm text-gray-500">
+                                <div className="font-semibold text-slate-900 text-sm md:text-base">Normalize Dates</div>
+                                <p className="text-xs md:text-sm text-slate-500">
                                     Convert to your chosen style
                                 </p>
                             </div>
@@ -187,16 +191,17 @@ export function ActionBar() {
                                 <button
                                     key={format.value}
                                     onClick={() => setSelectedDateFormat(format.value)}
+                                    title={`Convert dates to ${format.label} format (${format.example})`}
                                     className={`
                     p-3 rounded-lg text-left transition-all text-sm
                     ${selectedDateFormat === format.value
-                                            ? 'bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md scale-[1.02]'
-                                            : 'bg-white/60 border border-gray-200 text-gray-600 hover:border-indigo-200 hover:bg-indigo-50/30'
+                                            ? 'bg-gradient-to-br from-cyan-500 to-teal-600 text-white shadow-md scale-[1.02]'
+                                            : 'bg-white/60 border border-slate-200 text-slate-600 hover:border-cyan-200 hover:bg-cyan-50/30'
                                         }
                   `}
                                 >
                                     <div className="font-semibold text-xs md:text-sm">{format.label}</div>
-                                    <div className={`text-xs ${selectedDateFormat === format.value ? 'text-indigo-100' : 'text-gray-500'}`}>
+                                    <div className={`text-xs ${selectedDateFormat === format.value ? 'text-cyan-100' : 'text-slate-500'}`}>
                                         {format.example}
                                     </div>
                                 </button>
@@ -205,6 +210,7 @@ export function ActionBar() {
 
                         <button
                             onClick={handleFixDates}
+                            title="Convert all dates in your data to the selected format"
                             className="btn-premium w-full text-sm md:text-base"
                         >
                             Apply Date Format

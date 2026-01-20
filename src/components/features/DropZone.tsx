@@ -69,26 +69,27 @@ export function DropZone({ onFileSelected, isProcessing }: DropZoneProps) {
         cursor-pointer
         transition-all duration-300
         ${isDragging
-                    ? 'border-indigo-500 bg-indigo-50/30 scale-105'
-                    : 'border-gray-300 hover:border-indigo-400 hover:bg-indigo-50/10'
+                    ? 'border-cyan-500 bg-cyan-50/30 scale-102'
+                    : 'border-slate-300 hover:border-cyan-400 hover:bg-cyan-50/10'
                 }
         ${isProcessing ? 'pointer-events-none opacity-60' : ''}
       `}
             style={{
                 background: isDragging
-                    ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)'
-                    : 'rgba(255, 255, 255, 0.7)',
+                    ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 116, 144, 0.08) 100%)'
+                    : 'rgba(255, 255, 255, 0.75)',
                 animation: !isDragging && !isProcessing ? 'pulse 3s ease-in-out infinite' : 'none',
             }}
         >
             {/* Decorative gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-teal-500/5 pointer-events-none" />
 
             {/* Upload icon with animation */}
             <div className={`
         mb-6 inline-flex items-center justify-center
         w-20 h-20 rounded-full
-        bg-gradient-to-br from-indigo-500 to-purple-500
+        bg-gradient-to-br from-cyan-500 to-teal-600
+        shadow-lg shadow-cyan-500/25
         transition-transform duration-300
         ${isDragging ? 'scale-110' : 'hover:scale-105'}
       `}>
@@ -107,30 +108,30 @@ export function DropZone({ onFileSelected, isProcessing }: DropZoneProps) {
                 </svg>
             </div>
 
-            {/* Text content */}
+            {/*Text content */}
             <div className="relative z-10">
-                <h3 className="text-xl md:text-2xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <h3 className="text-xl md:text-2xl font-bold mb-3 bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
                     {isDragging ? 'Drop your file here' : 'Upload Excel or CSV'}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-slate-600 mb-4 text-sm md:text-base">
                     Drag and drop or click to browse
                 </p>
 
                 {/* Supported formats */}
-                <div className="flex flex-wrap gap-2 justify-center items-center text-sm text-gray-500">
-                    <span className="px-3 py-1 bg-white/50 rounded-full border border-gray-200">
+                <div className="flex flex-wrap gap-2 justify-center items-center text-sm text-slate-500">
+                    <span className="px-3 py-1 bg-white/60 rounded-full border border-slate-200">
                         .xlsx
                     </span>
-                    <span className="px-3 py-1 bg-white/50 rounded-full border border-gray-200">
+                    <span className="px-3 py-1 bg-white/60 rounded-full border border-slate-200">
                         .xls
                     </span>
-                    <span className="px-3 py-1 bg-white/50 rounded-full border border-gray-200">
+                    <span className="px-3 py-1 bg-white/60 rounded-full border border-slate-200">
                         .csv
                     </span>
                 </div>
 
                 {/* File size hint */}
-                <p className="mt-4 text-xs text-gray-400">
+                <p className="mt-4 text-xs text-slate-400">
                     Optimized for files up to 50,000 rows
                 </p>
             </div>

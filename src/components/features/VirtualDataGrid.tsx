@@ -137,8 +137,8 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
                                     className={`
                     flex border-b border-gray-100
                     transition-colors duration-150
-                    ${actualIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}
-                    hover:bg-indigo-50/40
+                    ${actualIndex % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}
+                    hover:bg-cyan-50/40
                   `}
                                     style={{ height: ROW_HEIGHT, width: displayColumns.length * COLUMN_WIDTH }}
                                 >
@@ -175,7 +175,7 @@ export function VirtualDataGrid({ height = 400, showOriginal = false }: VirtualD
                         </span>
                     )}
                     {visibleColumns.length < headers.length && (
-                        <span className="ml-2 px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
+                        <span className="ml-2 px-2 py-0.5 bg-cyan-100 text-cyan-700 text-xs rounded-full font-medium">
                             {headers.length - visibleColumns.length} hidden
                         </span>
                     )}

@@ -39,7 +39,7 @@ export function SortableColumnHeader({ columnIndex, header, width }: SortableCol
             className={`
         flex-shrink-0 px-2 py-2 text-sm font-medium text-gray-700 
         border-r border-gray-200 flex items-center justify-between gap-1
-        ${isDragging ? 'bg-indigo-50 shadow-lg' : 'bg-gray-100'}
+        ${isDragging ? 'bg-cyan-50 shadow-lg' : 'bg-gray-100'}
         cursor-grab active:cursor-grabbing
       `}
             {...attributes}
