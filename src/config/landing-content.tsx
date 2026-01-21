@@ -4,6 +4,7 @@ export interface LandingContent {
     seoTitle: string;
     seoDescription: string;
     seoKeywords: string[];
+    ogImage?: string;
     heroHeadline: React.ReactNode;
     heroSubheadline: React.ReactNode;
     heroBadge: string;
@@ -73,6 +74,7 @@ export const landingContent: Record<string, LandingContent> = {
         seoTitle: "Remove Blank Rows from Excel Online Free - Instant & Private",
         seoDescription: "The fastest way to remove blank rows from Excel and CSV files online. Free, secure, and processing happens 100% in your browser. Handle 500k+ rows easily.",
         seoKeywords: ["remove blank rows excel", "delete empty rows", "clean excel online", "remove blank lines csv", "excel cleanup tool"],
+        ogImage: "/og-images/remove-blank-rows.png",
         heroHeadline: (
             <>
                 Remove Blank Rows <br className="hidden lg:block" />
@@ -121,18 +123,18 @@ export const landingContent: Record<string, LandingContent> = {
                     <p className="mb-4">
                         <strong>The "Ghost Row" Problem:</strong> Often, rows <em>look</em> empty but contain non-printing characters
                         (like spaces or line breaks) or metadata residue from previous deletions. Standard Excel filters often miss these.
-                        DataScrub's <strong>Deep Clean</strong> engine analyzes the bytecode of the file to clarify true emptiness vs. visual emptiness.
+                        Excel Clean's <strong>Deep Clean</strong> engine analyzes the bytecode of the file to clarify true emptiness vs. visual emptiness.
                     </p>
                     <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Better Than Macros</h3>
                     <p className="mb-4">
-                        Writing a VBA macro to <code>loop through Range.Rows</code> is slow and security-risky. Using DataScrub allows you to
+                        Writing a VBA macro to <code>loop through Range.Rows</code> is slow and security-risky. Using Excel Clean allows you to
                         audit and clean millions of cells in seconds using compiled WebAssembly performance, without enabling macros on your machine.
                     </p>
                 </>
             )
         },
         testimonials: [
-            { quote: "I had a 300MB inventory file with thousands of blank rows causing my SQL import to fail. DataScrub fixed it in 10 seconds.", author: "James L.", role: "Backend Engineer", company: "Logistics Co" },
+            { quote: "I had a 300MB inventory file with thousands of blank rows causing my SQL import to fail. Excel Clean fixed it in 10 seconds.", author: "James L.", role: "Backend Engineer", company: "Logistics Co" },
             { quote: "Seamless. I don't trust uploading my client's financial data to random websites. Knowing this runs locally makes it my go-to.", author: "Amanda K.", role: "CPA" },
             { quote: "Saved me from scrolling through 50,000 rows to find the breaks. A lifesaver.", author: "Raj P.", role: "Data Scientist" }
         ]
@@ -141,6 +143,7 @@ export const landingContent: Record<string, LandingContent> = {
         seoTitle: "Fix Excel Date Format Online - Convert MDY, DMY, ISO Instantly",
         seoDescription: "Fix mixed date formats in Excel and CSV files. Standardize dates to US, UK, or ISO formats automatically. Free and secure.",
         seoKeywords: ["fix excel date format", "convert excel dates", "normalize dates csv", "excel date problem", "iso 8601 converter"],
+        ogImage: "/og-images/fix-excel-date-format.png",
         heroHeadline: (
             <>
                 Fix Excel Dates <br className="hidden lg:block" />
@@ -186,13 +189,13 @@ export const landingContent: Record<string, LandingContent> = {
                         local system settings, which causes chaos when sharing files internationally.
                     </p>
                     <p className="mb-4">
-                        <strong>ISO 8601 to the Rescue:</strong> The only unambiguous date format is <code>YYYY-MM-DD</code>. DataScrub parses your messy
+                        <strong>ISO 8601 to the Rescue:</strong> The only unambiguous date format is <code>YYYY-MM-DD</code>. Excel Clean parses your messy
                         inputs using a heuristic engine that scores potential formats for likelihood, then standardizes everything to ISO (or your preferred local format).
                     </p>
                     <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Handling Excel Serial Dates</h3>
                     <p className="mb-4">
                         Have you ever seen "44562" instead of "Jan 1, 2022"? That is an Excel serial date—the number of days since Jan 1, 1900.
-                        Most regex scripts fail to parse this. DataScrub detects these integers contextually and converts them correctly.
+                        Most regex scripts fail to parse this. Excel Clean detects these integers contextually and converts them correctly.
                     </p>
                 </>
             )
@@ -207,6 +210,7 @@ export const landingContent: Record<string, LandingContent> = {
         seoTitle: "Trim Whitespace Excel Online - Remove Leading & Trailing Spaces",
         seoDescription: "Bulk remove leading, trailing, and extra spaces from Excel cells. Clean your data for analysis instantly and securely.",
         seoKeywords: ["trim whitespace excel", "remove spaces excel", "clean text excel", "remove leading spaces csv", "excel trim function online"],
+        ogImage: "/og-images/trim-excel-whitespace.png",
         heroHeadline: (
             <>
                 Trim Extra Spaces <br className="hidden lg:block" />
@@ -252,19 +256,19 @@ export const landingContent: Record<string, LandingContent> = {
                         from <code>"Apple"</code>. This causes <code>VLOOKUP</code>, <code>INDEX/MATCH</code>, and SQL joins to fail silently.
                     </p>
                     <p className="mb-4">
-                        <strong>Beyond TRIM():</strong> Excel's native trim function is good, but applying it to 50 columns requires creating 50 helper columns,
-                        dragging formulas, pasting as values, and deleting the originals. DataScrub does this for the entire sheet instantly in memory.
+                        **Beyond TRIM():** Excel's native trim function is good, but applying it to 50 columns requires creating 50 helper columns,
+                        dragging formulas, pasting as values, and deleting the originals. Excel Clean does this for the entire sheet instantly in memory.
                     </p>
                     <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Ghost Characters</h3>
                     <p className="mb-4">
-                        DataScrub also handles non-breaking spaces (<code>&nbsp;</code> or char 160) which are common in web-scraped data
+                        Excel Clean also handles non-breaking spaces (<code>&nbsp;</code> or char 160) which are common in web-scraped data
                         and which standard trim functions often miss.
                     </p>
                 </>
             )
         },
         testimonials: [
-            { quote: "I spent 2 days trying to figure out why my SQL joins were returning zero results. It was trailing spaces. DataScrub fixed it in 2 seconds.", author: "Marcus D.", role: "Database Admin" },
+            { quote: "I spent 2 days trying to figure out why my SQL joins were returning zero results. It was trailing spaces. Excel Clean fixed it in 2 seconds.", author: "Marcus D.", role: "Database Admin" },
             { quote: "Essential for cleaning mailing lists. We used to have so many duplicate entries because of extra spaces.", author: "Lisa M.", role: "Marketing Director" },
             { quote: "Simple, fast, and private. Exactly what a utility tool should be.", author: "Kevin B.", role: "Analyst" }
         ]
@@ -273,6 +277,7 @@ export const landingContent: Record<string, LandingContent> = {
         seoTitle: "Clean CSV Files Online - Remove Bad Data & Fix Formats",
         seoDescription: "The best free tool to clean CSV files. Remove duplicates, fix dates, and trim whitespace. Works with large files up to 50MB.",
         seoKeywords: ["clean csv online", "csv cleaner", "fix csv formatting", "remove bad rows csv", "csv scrubber"],
+        ogImage: "/og-images/clean-csv-online.png",
         heroHeadline: (
             <>
                 Clean CSV Files <br className="hidden lg:block" />
@@ -318,7 +323,7 @@ export const landingContent: Record<string, LandingContent> = {
                         formatted date can break an entire pipeline.
                     </p>
                     <p className="mb-4">
-                        <strong>The DataScrub Advantage:</strong> We use a robust RFC-4180 compliant parser that handles edge cases like
+                        <strong>The Excel Clean Advantage:</strong> We use a robust RFC-4180 compliant parser that handles edge cases like
                         newlines inside quoted fields, which breaks most simple "split by comma" scripts. We allow you to inspect, clean, and re-serialize
                         your data into a strictly compliant format that will load into any database or software without errors.
                     </p>

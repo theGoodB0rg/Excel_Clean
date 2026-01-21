@@ -14,6 +14,8 @@ function App() {
         {/* The Tool Workspace */}
         <Route path="/tool" element={<Tool />} />
 
+
+
         {/* Power Pages - Dedicated Landing Pages for SEO Domination */}
         <Route
           path="/remove-blank-rows-excel"

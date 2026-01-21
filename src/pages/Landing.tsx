@@ -40,8 +40,10 @@ export function Landing({
         seoDescription: "Free online Excel & CSV data cleaner. Remove blank rows in bulk, fix mixed date formats, trim extra whitespace. 100% private - files processed in your browser.",
         seoKeywords: [
             "excel data cleaner online free", "remove blank rows excel", "clean csv online",
+            "excel data cleaner online free", "remove blank rows excel", "clean clean online",
             "fix date format excel", "trim whitespace excel"
         ],
+        ogImage: "/og-image.jpg", // Fallback to generic if we have one, or undefined
         heroHeadline: undefined, // Will use Hero default
         heroSubheadline: undefined, // Will use Hero default
         heroBadge: undefined, // Will use Hero default
@@ -60,6 +62,7 @@ export function Landing({
                 description={content.seoDescription}
                 keywords={content.seoKeywords}
                 schema={seoSchema}
+                image={content.ogImage}
             />
 
             {/* Header */}
@@ -70,7 +73,7 @@ export function Landing({
                             DS
                         </div>
                         <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-700 to-teal-700 bg-clip-text text-transparent">
-                            DataScrub
+                            Excel Clean
                         </h1>
                     </div>
                     <button
@@ -111,7 +114,7 @@ export function Landing({
             <RelatedTools />
 
             <footer className="py-8 bg-slate-900 text-slate-400 text-sm text-center border-t border-white/10">
-                <p>© {new Date().getFullYear()} DataScrub. 100% Private & Secure.</p>
+                <p>© {new Date().getFullYear()} Excel Clean. 100% Private & Secure.</p>
             </footer>
         </div>
     );

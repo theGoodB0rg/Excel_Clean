@@ -4,7 +4,7 @@ export const schemas = {
         "@context": "https://schema.org",
         "@type": "HowTo",
         "name": "How to Remove Blank Rows from Excel Online",
-        "description": "A quick guide to removing empty rows from Excel spreadsheets using DataScrub.",
+        "description": "A quick guide to removing empty rows from Excel spreadsheets using Excel Clean.",
         "step": [
             {
                 "@type": "HowToStep",
@@ -61,7 +61,7 @@ export const schemas = {
             {
                 "@type": "HowToStep",
                 "name": "Load Spreadsheet",
-                "text": "Open your file in DataScrub's browser-based editor.",
+                "text": "Open your file in Excel Clean's browser-based editor.",
                 "image": "https://excel-clean.vercel.app/og-image.jpg"
             },
             {
