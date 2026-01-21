@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://excel-clean.vercel.app/sitemap.xml

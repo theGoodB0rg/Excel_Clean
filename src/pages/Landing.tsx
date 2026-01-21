@@ -7,6 +7,7 @@ import { CTA } from '../components/landing/CTA';
 import { useFileHandler } from '../hooks/useFileHandler';
 import { useDataStore } from '../stores/data-store';
 import { SEO } from '../components/seo/SEO';
+import { RelatedTools } from '../components/layout/RelatedTools';
 
 interface LandingProps {
     seoTitle?: string;
@@ -78,6 +79,8 @@ export function Landing({
                 <FAQ />
                 <CTA onUploadClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
             </main>
+
+            <RelatedTools />
 
             <footer className="py-8 bg-slate-900 text-slate-400 text-sm text-center border-t border-white/10">
                 <p>© {new Date().getFullYear()} DataScrub. 100% Private & Secure.</p>
