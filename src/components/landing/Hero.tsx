@@ -6,9 +6,31 @@ interface HeroProps {
     isProcessing: boolean;
     progress: number;
     error: string | null;
+    headline?: React.ReactNode;
+    subheadline?: React.ReactNode;
+    badgeText?: string;
 }
 
-export function Hero({ onFileSelected, isProcessing, progress, error }: HeroProps) {
+export function Hero({
+    onFileSelected,
+    isProcessing,
+    progress,
+    error,
+    headline = (
+        <>
+            Clean Excel Data <br className="hidden lg:block" />
+            <span className="bg-gradient-to-r from-cyan-600 to-teal-500 bg-clip-text text-transparent">
+                In Seconds
+            </span>
+        </>
+    ),
+    subheadline = (
+        <>
+            The secure, browser-based tool to <span className="text-slate-900 font-semibold">fix dates</span>, <span className="text-slate-900 font-semibold">remove blanks</span>, and <span className="text-slate-900 font-semibold">trim text</span>.
+        </>
+    ),
+    badgeText = "v2.0 Now Available"
+}: HeroProps) {
     return (
         <section className="relative w-full pt-8 pb-16 md:pt-16 md:pb-24 overflow-hidden">
             {/* Background Decor - reduced opacity and size for subtlety */}
@@ -27,16 +49,13 @@ export function Hero({ onFileSelected, isProcessing, progress, error }: HeroProp
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                                 </span>
-                                v2.0 Now Available
+                                {badgeText}
                             </div>
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
-                                Clean Excel Data <br className="hidden lg:block" />
-                                <span className="bg-gradient-to-r from-cyan-600 to-teal-500 bg-clip-text text-transparent">
-                                    In Seconds
-                                </span>
+                                {headline}
                             </h1>
                             <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                                The secure, browser-based tool to <span className="text-slate-900 font-semibold">fix dates</span>, <span className="text-slate-900 font-semibold">remove blanks</span>, and <span className="text-slate-900 font-semibold">trim text</span>.
+                                {subheadline}
                             </p>
                         </div>
 
