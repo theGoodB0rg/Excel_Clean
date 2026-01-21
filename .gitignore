@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 # Research/Scraping files (not part of app)
-scripts/
 *_research*.json
 *_market*.json
 keyword_research_report.json

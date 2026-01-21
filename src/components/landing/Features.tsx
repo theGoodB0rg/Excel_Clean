@@ -1,43 +1,14 @@
-export function Features() {
-    const features = [
-        {
-            icon: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            ),
-            title: 'Remove Blank Rows',
-            desc: 'Instantly detect and delete empty rows across your entire dataset. Adjustable sensitivity for "mostly empty" rows.'
-        },
-        {
-            icon: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            ),
-            title: 'Normalize Dates',
-            desc: 'Intelligently parses mixed date formats (US, UK, ISO) and standardizes them to your preferred output format.'
-        },
-        {
-            icon: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-            ),
-            title: 'Trim & Clean Text',
-            desc: 'Remove accidental leading/trailing whitespace, fix double spaces, and standardize text case automatically.'
-        },
-        {
-            icon: (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-            ),
-            title: 'Privacy First',
-            desc: 'Zero data upload. All processing happens locally in your browser via WebAssembly and JavaScript.'
-        }
-    ];
+interface FeatureItem {
+    icon: React.ReactNode;
+    title: string;
+    desc: string;
+}
 
+interface FeaturesProps {
+    features?: FeatureItem[];
+}
+
+export function Features({ features = defaultFeatures }: FeaturesProps) {
     return (
         <section className="py-16 lg:py-24 bg-slate-50 relative">
             <div className="container">
@@ -67,3 +38,42 @@ export function Features() {
         </section>
     );
 }
+
+const defaultFeatures = [
+    {
+        icon: (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+        ),
+        title: 'Remove Blank Rows',
+        desc: 'Instantly detect and delete empty rows across your entire dataset. Adjustable sensitivity for "mostly empty" rows.'
+    },
+    {
+        icon: (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+        ),
+        title: 'Normalize Dates',
+        desc: 'Intelligently parses mixed date formats (US, UK, ISO) and standardizes them to your preferred output format.'
+    },
+    {
+        icon: (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        ),
+        title: 'Trim & Clean Text',
+        desc: 'Remove accidental leading/trailing whitespace, fix double spaces, and standardize text case automatically.'
+    },
+    {
+        icon: (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        ),
+        title: 'Privacy First',
+        desc: 'Zero data upload. All processing happens locally in your browser via WebAssembly and JavaScript.'
+    }
+];

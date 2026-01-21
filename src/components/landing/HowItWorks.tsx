@@ -1,25 +1,15 @@
-export function HowItWorks() {
-    const steps = [
-        {
-            num: '01',
-            title: 'Upload File',
-            desc: 'Drag & drop your Excel (.xlsx) or CSV file. We support huge files up to 500MB+.',
-            color: 'bg-blue-500'
-        },
-        {
-            num: '02',
-            title: 'Select Actions',
-            desc: 'Toggle the cleaning rules you need. Preview the changes in real-time before applying.',
-            color: 'bg-cyan-500'
-        },
-        {
-            num: '03',
-            title: 'Export Clean Data',
-            desc: 'Download your polished dataset as a new CSV, ready for Tableau, PowerBI, or SQL.',
-            color: 'bg-teal-500'
-        }
-    ];
+interface StepItem {
+    num: string;
+    title: string;
+    desc: string;
+    color: string;
+}
 
+interface HowItWorksProps {
+    steps?: StepItem[];
+}
+
+export function HowItWorks({ steps = defaultSteps }: HowItWorksProps) {
     return (
         <section className="py-16 lg:py-24 bg-white">
             <div className="container">
@@ -54,3 +44,24 @@ export function HowItWorks() {
         </section>
     );
 }
+
+const defaultSteps = [
+    {
+        num: '01',
+        title: 'Upload File',
+        desc: 'Drag & drop your Excel (.xlsx) or CSV file. We support huge files up to 500MB+.',
+        color: 'bg-blue-500'
+    },
+    {
+        num: '02',
+        title: 'Select Actions',
+        desc: 'Toggle the cleaning rules you need. Preview the changes in real-time before applying.',
+        color: 'bg-cyan-500'
+    },
+    {
+        num: '03',
+        title: 'Export Clean Data',
+        desc: 'Download your polished dataset as a new CSV, ready for Tableau, PowerBI, or SQL.',
+        color: 'bg-teal-500'
+    }
+];

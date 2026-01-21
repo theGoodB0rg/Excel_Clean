@@ -1,23 +1,13 @@
-export function FAQ() {
-    const faqs = [
-        {
-            q: 'Is my data secure?',
-            a: 'Yes, absolutely. DataScrub runs 100% in your web browser. Your file is never uploaded to any server, cloud storage, or third party. You can even turn off your internet connection after loading the page and it will still work.'
-        },
-        {
-            q: 'Is there a limit on file size?',
-            a: 'We leverage the latest browser technologies to handle files much larger than typical online converters. While performance depends on your computer\'s RAM, we routinely process files with 500,000+ rows seamlessly.'
-        },
-        {
-            q: 'Does it support multiple sheets?',
-            a: 'Currently, we process the first sheet of an Excel workbook. For multi-sheet support, please save each sheet as a separate CSV file.'
-        },
-        {
-            q: 'Is it free?',
-            a: 'Yes, DataScrub is completely free to use for personal and commercial projects. We may introduce premium features in the future, but the core cleaning tools will remain free.'
-        }
-    ];
+interface FAQItem {
+    q: string;
+    a: string;
+}
 
+interface FAQProps {
+    faqs?: FAQItem[];
+}
+
+export function FAQ({ faqs = defaultFaqs }: FAQProps) {
     return (
         <section className="py-16 lg:py-24 bg-white">
             <div className="container max-w-3xl">
@@ -46,3 +36,22 @@ export function FAQ() {
         </section>
     );
 }
+
+const defaultFaqs = [
+    {
+        q: 'Is my data secure?',
+        a: 'Yes, absolutely. DataScrub runs 100% in your web browser. Your file is never uploaded to any server, cloud storage, or third party. You can even turn off your internet connection after loading the page and it will still work.'
+    },
+    {
+        q: 'Is there a limit on file size?',
+        a: 'We leverage the latest browser technologies to handle files much larger than typical online converters. While performance depends on your computer\'s RAM, we routinely process files with 500,000+ rows seamlessly.'
+    },
+    {
+        q: 'Does it support multiple sheets?',
+        a: 'Currently, we process the first sheet of an Excel workbook. For multi-sheet support, please save each sheet as a separate CSV file.'
+    },
+    {
+        q: 'Is it free?',
+        a: 'Yes, DataScrub is completely free to use for personal and commercial projects. We may introduce premium features in the future, but the core cleaning tools will remain free.'
+    }
+];
